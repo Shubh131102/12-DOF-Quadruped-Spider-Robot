@@ -1,92 +1,66 @@
-# 12-DOF Quadruped Robot — Mechanical Design & Fabrication
+# 12-DOF Quadruped Robot
 
-A 12-DOF quadruped robot designed for traversing rough and uneven terrain, 
-featuring FEA-optimized leg structures, servo-driven gait control, thermal 
-management solutions, and WiFi-based remote operation with live video streaming.
+A four-legged walking robot designed, 3D printed, wired, and programmed from scratch at UC Riverside. Three joints per leg, servo-driven tripod gait, and FEA-optimized legs that walk on uneven terrain.
 
----
+<p align="center">
+  <img src="media/WhatsApp%20Image%202025-10-01%20at%2014.58.55_7e579c70.jpg" alt="12-DOF quadruped robot with orange 3D-printed legs" width="420">
+</p>
 
-## Key Results
-- **25% stiffness-to-weight improvement** via ANSYS FEA-driven leg geometry iteration
-- **Walking Speed** ≈ 8.55 cm/s (0.8s step cycle)
-- **Stride Length** ≈ 6.84 cm (calculated via swing angle and leg length)
-- **Power Usage** ≈ 7.5W (1.5A × 5V during 6-servo load)
-- Successfully demonstrated stable locomotion on uneven terrain with hip 
-adduction for lateral balance
+## Results
 
----
+| | |
+|---|---|
+| Stiffness-to-weight gain from FEA on the legs | **25%** |
+| Actuators | 12 servos, 3 per leg |
+| Walking speed | About 8.5 cm/s (0.8 s step cycle) |
+| Stride length | About 6.8 cm |
+| Power draw | About 7.5 W with 6 servos under load |
+| Outcome | Stable walking on uneven terrain |
 
-## Mechanical Design
-- Designed chassis and articulated leg linkages in **SolidWorks**
-- Iterated leg geometry through **ANSYS FEA** — removed material from 
-low-stress regions, reinforced high-stress areas achieving 25% 
-stiffness-to-weight improvement
-- Selected 12 servo actuators based on torque requirements derived from 
-leg geometry and weight analysis
-- Resolved thermal buildup by redesigning chassis geometry to improve 
-heat dissipation
-- Implemented hip adduction mechanism for lateral balance during locomotion
-- Diagnosed and resolved voltage sag causing Arduino resets by upgrading 
-power wiring gauge
-- Manufactured 12 3D printed PLA leg components across 4 legs through 
-multi-iteration fabrication
+## What I designed
 
----
+- **Chassis and leg linkages** in SolidWorks, printed in PLA over several iterations
+- **FEA-driven legs:** used ANSYS to remove material from low-stress regions and reinforce high-stress areas
+- **Actuator sizing:** picked the 12 servos from joint torque requirements based on leg geometry and robot weight
+- **Hip adduction mechanism** for side-to-side balance while walking
+- **Harness routing** for 12 servos across all joints
 
-## Features
-- 12-DOF — 3 degrees of freedom per leg across 4 legs
-- SolidWorks-designed, 3D-printed PLA body
-- Python Tkinter GUI for manual and sequence-based control
-- Tripod gait walking via JSON pose playback
-- ESP32-CAM integration for live video streaming
-- WiFi-based control over local network
-- Hip adduction for lateral stability on uneven terrain
+## What broke, and how I fixed it
 
----
+| Problem | Root cause | Fix |
+|---|---|---|
+| Arduino kept resetting mid-gait | Voltage sag when several servos moved at once | Upgraded power wiring gauge and separated logic and servo power |
+| Servos overheating | Heat trapped inside the chassis | Redesigned the chassis geometry for airflow |
+| Intermittent servo dropouts | Cable fatigue at the moving joints | Rerouted the harness to reduce bending at the joints |
 
-## Tech Stack
-- **Mechanical:** SolidWorks · ANSYS FEA · 3D Printing (PLA)
-- **Software:** Python · Tkinter · Arduino C++ · JSON
-- **Hardware:** Arduino UNO R4 WiFi · PCA9685 · ESP32-CAM · 12× MG996R/SG90
-- **Control:** Servo Control · Tripod Gait · WiFi Communication
+## What's in this repo
 
----
+| Path | Contents |
+|---|---|
+| `python_gui/app.py` | Tkinter control app: individual servo control, preset poses, gait selection, emergency stop, serial link to the Arduino |
+| `launch/bringup.launch.py` | ROS 2 launch file for camera relay, servo control, and teleop |
+| `config/servos.yaml` | Servo channel and limit configuration |
+| `bom/bom.csv` | Bill of materials |
+| `docs/` | Project presentation |
+| `media/` | Photos of the built robot |
 
-## File Structure
-├── walk.py                 # Main Python GUI for control
-├── cam.py                  # ESP32-CAM video stream viewer
-├── poses/                  # JSON pose files (start.json to 5.json)
-├── Arduino/                # Arduino sketch for servo control
-├── servo_positions.json    # Saved servo poses
-├── cad/                    # SolidWorks CAD files
-├── images/                 # Screenshots, diagrams, photos
-├── LICENSE
-└── README.md
+## Hardware
 
----
+Arduino UNO R4 WiFi, PCA9685 PWM driver, 12 MG996R / SG90 servos, ESP32-CAM for live video, battery with BEC.
 
-## Future Enhancements
-- IMU-based gait adaptation and stability
-- Autonomous path planning (A*/SLAM)
-- Ultrasonic obstacle detection
-- Object/person detection using OpenCV or YOLO
-- Power-efficient gait transitions
+## Run the control app
 
----
+```bash
+pip install pyserial
+python python_gui/app.py
+```
 
-## Contributors
-- [Shubham Jangle](https://github.com/Shubh131102)
-- Shubham Dehrgave
-- Soumya Mondal
+Select the Arduino's serial port in the app, connect, then pick a pose or gait.
 
----
+## Team
+
+[Shubham Jangle](https://github.com/Shubh131102), Shubham Dehrgave, Soumya Mondal
 
 ## License
-This project is licensed under the MIT License.
 
----
-
-**Resources:**
-- [Project Presentation](docs/Spider%20Robot%20Presentation.pptx)
-- [CAD Files](cad/)
-- [Firmware](Arduino/)
+MIT
